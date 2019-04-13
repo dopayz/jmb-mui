@@ -1,0 +1,51 @@
+{
+  "index.html": {
+    "refer": [
+      "index-menu.html",
+      "examples/guide.html"
+    ],
+    "resources": []
+  },
+  "typeSelect.html": {
+    "refer": [
+      "typeMenu.html"
+    ],
+    "resources": []
+  },
+  "typeMenu.html": {
+    "refer": [
+      "question.html",
+      "collectQues.html",
+      "selfInfo.html",
+      "errorQues.html",
+      "selfSetting.html"
+    ],
+    "resources": []
+  },
+  "login.html": {
+    "refer": [
+      "typeSelect.html",
+      "reg.html",
+      "forget_password.html"
+    ],
+    "resources": [
+      "js/app.js",
+      "css/style.css",
+      "js/appConfig.js",
+      "js/mui.enterfocus.js",
+      "js/mui.message.js",
+      "images/fwlogo.png",
+      "images/bg.jpg"
+    ]
+  },
+  "reg.html": {
+    "refer": [
+      "login.html"
+    ]
+  },
+  "forget_password.html": {
+    "refer": [
+      "login.html"
+    ]
+  }
+}

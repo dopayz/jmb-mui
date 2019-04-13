@@ -1,0 +1,640 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/icons-extra.css" rel="stylesheet"/>
+		<style type="text/css">
+			.header-f {
+				background: #007AFF;
+				border-bottom-left-radius: 10px;
+				border-bottom-right-radius: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav header-f">
+			<a class="mui-btn mui-btn-blue mui-btn-link mui-pull-left">
+				<span id="tit" style="font-size: 15px;color: white;">错题集预览</span>
+				<span class="mui-icon-extra mui-icon-extra-cart mui-hidden" id="getQues" style="color: white;margin-left:60px;"></span>
+			</a>
+		</header>
+		<div class="mui-content">
+			<div class="mui-card" id="tpSelect">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+		                <a id="M_T_1" class="mui-navigate-right">
+		                    <span id="tp1" class="mui-badge mui-badge-primary">0</span>
+		                    Java基础
+		                </a>
+		           </li>
+		            <li class="mui-table-view-cell">
+		                <a id="M_T_2" class="mui-navigate-right">
+		                    <span id="tp2" class="mui-badge mui-badge-primary">0</span>
+		                    Java多线程
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a id="M_T_3" class="mui-navigate-right">
+		                    <span id="tp3" class="mui-badge mui-badge-primary">0</span>
+		                    Java集合框架
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a id="M_T_4" class="mui-navigate-right">
+		                    <span id="tp4" class="mui-badge mui-badge-primary">0</span>
+		                   	 网络编程
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a id="M_T_5" class="mui-navigate-right">
+		                    <span id="tp5" class="mui-badge mui-badge-primary">0</span>
+		                    JavaWeb基础
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a id="M_T_6" class="mui-navigate-right">
+		                    <span id="tp6" class="mui-badge mui-badge-primary">0</span>
+		                    spring springMvc
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a id="M_T_7" class="mui-navigate-right">
+		                    <span id="tp7" class="mui-badge mui-badge-primary">0</span>
+		                    hibernate mybatis
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a id="M_T_8" class="mui-navigate-right">
+		                    <span id="tp8" class="mui-badge mui-badge-primary">0</span>
+		                    Maven Linux常用命令
+		                </a>
+		            </li>
+					<li class="mui-table-view-cell">
+		                <a id="M_T_9" class="mui-navigate-right">
+		                    <span id="tp9" class="mui-badge mui-badge-primary">0</span>
+		                  	 项目相关知识
+		                </a>
+		            </li>
+				</ul>
+			</div>
+		    <div class="mui-card mui-hidden" id="ques_card">
+				<div class="mui-card-header mui-card-media">
+					<div class="mui-media-body">
+						<span style="color: green;" id="tbs">多选题</span>
+						<h4 id="ques_title">hibernate和mybatis的区别，下面哪些正确？</h4>
+					</div>
+				</div>
+				<div class="mui-card-content" >
+					<form class="mui-input-group">
+						<div class="mui-input-row mui-checkbox mui-left" style="height: 90px;">
+							<label>A:<span id="select_A">hibernate全自动，mybatis半自动</span></label>
+							<div class="config"><input name="checkbox" value="A" type="checkbox" ></div>
+						</div>
+						<div class="mui-input-row mui-checkbox mui-left" style="height: 90px;">
+							<label>B:<span id="select_B">hibernate基于ORM</span></label>
+							<div class="config"><input name="checkbox" value="B" type="checkbox" ></div>
+						</div>
+						<div class="mui-input-row mui-checkbox mui-left " style="height: 90px;">
+							<label>C:<span id="select_C">mybatis适合复杂sql文查询</span></label>
+							<div class="config"><input name="checkbox" value="C" type="checkbox" ></div>
+						</div>
+						<div class="mui-input-row mui-checkbox mui-left " style="height: 90px;">
+							<label>D:<span id="select_D">hibernate面向对象的持久层框架</span></label>
+							<div class="config"><input name="checkbox" value="D" type="checkbox" ></div>
+						</div>
+					</form>
+				</div>
+				<div class="mui-card-footer" style="text-align: center;">
+					<a id="pre" class="mui-card-link">上一题</a>
+					<a id="detail" class="mui-card-link ">查看详解</a>
+					<a id="next" class="mui-card-link">下一题</a>
+				</div>
+			
+				<div class="mui-card mui-hidden" id="ques_detail">
+					<div class="mui-card-header" style="font-size:small ;">正确答案：<span id="admin" style="color: green;"></span></div>
+						<div class="mui-card-content">
+							<div class="mui-card-content-inner">
+								详解:<span id="ques_d"></span>
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/appAudio.js"></script>
+		<script src="js/appConfig.js"></script>
+		<script type="text/javascript">
+			var errorDataArr;
+			var errorData = new Array();
+			var count = 1;
+			var tc1 = 0,tc2 = 0,tc3 = 0,tc4 = 0,tc5 = 0,tc6 = 0,tc7 = 0,tc8 = 0,tc9 = 0;
+			//页面初始化
+			(function($, doc) {
+				$.plusReady(function() {
+					doc.getElementsByClassName('mui-content')[0].style.height = (plus.display.resolutionHeight) + 'px';
+					//手机返回事件
+					$.back = function(event) {
+						if(errorData.length == 0){
+							plus.webview.getTopWebview().close();
+						}else{
+							document.getElementById("tpSelect").classList.remove("mui-hidden");
+							document.getElementById("ques_card").classList.add("mui-hidden");
+							//清空数据
+							errorData = new Array();
+						}	
+					};
+					//只在第一次进入时从后端获取错题集数据，并初始化页面
+					mui.ajax(URL_ERROR_QUES,{
+							data:{},
+							dataType:'json',
+							type:'post',
+							timeout: 50000, //超时时间设置为5秒；
+							crossDomain: true,
+							success: function(data) {
+								if(data.length == 0){
+									displayVoice2("您没有错题，马上为你跳回主页面，请稍等");
+									mui.openWindow({
+										url:'typeMenu.html',
+										id:'typeMenu'
+									})
+								}
+								errorDataArr = data;
+								for (var i = 0;i < errorDataArr.length;i++) {
+									if(errorDataArr[i].quesType == "1"){
+										tc1++;
+									}else if(errorDataArr[i].quesType == "2"){
+										tc2++;
+									}else if(errorDataArr[i].quesType == "3"){
+										tc3++;
+									}else if(errorDataArr[i].quesType == "4"){
+										tc4++;
+									}else if(errorDataArr[i].quesType == "5"){
+										tc5++;
+									}else if(errorDataArr[i].quesType == "6"){
+										tc6++;
+									}else if(errorDataArr[i].quesType == "7"){
+										tc7++;
+									}else if(errorDataArr[i].quesType == "8"){
+										tc8++;
+									}else if(errorDataArr[i].quesType == "9"){
+										tc9++;
+									}
+								}
+								var spanArr = new Array("tp1","tp2","tp3","tp4","tp5","tp6","tp7","tp8","tp9");
+								var valArr = new Array(tc1,tc2,tc3,tc4,tc5,tc6,tc7,tc8,tc9);
+								for (var i = 0;i < spanArr.length;i++) {
+										setVal(spanArr[i],valArr[i]);	
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								mui.alert(YUN_ADMIN_MAIN_002);
+							}
+					})
+					//为span内容赋值
+					function setVal(doc,val){
+						document.getElementById(doc).innerText = val;
+					}
+					document.getElementById("M_T_1").addEventListener('tap',function (e) {
+							count = 1;
+							if(document.getElementById("tp1").innerText == 0){
+								displayVoice2("当前题型没有题，请选择其他题型");
+							}else{
+								for (var i = 0;i < errorDataArr.length;i++) {
+									if(errorDataArr[i].quesType == "1"){
+										errorData.push(errorDataArr[i]);
+									}
+								}
+								document.getElementById("tpSelect").classList.add("mui-hidden");
+								document.getElementById("ques_card").classList.remove("mui-hidden");
+								//页面初始化时，设置全题收藏标识为未收藏
+								for(var i = 0;i < errorData.length;i++){
+									localStorage.setItem(i+1+"quesGet","0");
+								}
+								document.getElementById("tit").innerHTML = "Java基础（" + "" + count + "/" + errorData.length + "）";
+								document.getElementById("getQues").classList.remove("mui-hidden");
+								initQuesCheckStyle();
+								showQues();
+							}		
+					});
+					document.getElementById("M_T_2").addEventListener('tap',function (e) {
+							count = 1;
+							if(document.getElementById("tp2").innerText == 0){
+								displayVoice2("当前题型没有题，请选择其他题型");
+							}else{
+								for (var i = 0;i < errorDataArr.length;i++) {
+									if(errorDataArr[i].quesType == "2"){
+										errorData.push(errorDataArr[i]);
+									}
+								}
+								document.getElementById("tpSelect").classList.add("mui-hidden");
+								document.getElementById("ques_card").classList.remove("mui-hidden");
+								//页面初始化时，设置全题收藏标识为未收藏
+								for(var i = 0;i < errorData.length;i++){
+									localStorage.setItem(i+1+"quesGet","0");
+								}
+								document.getElementById("tit").innerHTML = "Java多线程（" + "" + count + "/" + errorData.length + "）";
+								document.getElementById("getQues").classList.remove("mui-hidden");
+								initQuesCheckStyle();
+								showQues();
+							}
+					});
+					document.getElementById("M_T_3").addEventListener('tap',function (e) {
+							count = 1;
+							if(document.getElementById("tp3").innerText == 0){
+								displayVoice2("当前题型没有题，请选择其他题型");
+							}else{
+								for (var i = 0;i < errorDataArr.length;i++) {
+									if(errorDataArr[i].quesType == "3"){
+										errorData.push(errorDataArr[i]);
+									}
+								}
+								document.getElementById("tpSelect").classList.add("mui-hidden");
+								document.getElementById("ques_card").classList.remove("mui-hidden");
+								//页面初始化时，设置全题收藏标识为未收藏
+								for(var i = 0;i < errorData.length;i++){
+									localStorage.setItem(i+1+"quesGet","0");
+								}
+								document.getElementById("tit").innerHTML = "Java集合框架（" + "" + count + "/" + errorData.length + "）";
+								document.getElementById("getQues").classList.remove("mui-hidden");
+								initQuesCheckStyle();
+								showQues();
+							}
+					});
+					document.getElementById("M_T_4").addEventListener('tap',function (e) {
+							count = 1;
+							if(document.getElementById("tp4").innerText == 0){
+								displayVoice2("当前题型没有题，请选择其他题型");
+							}else{
+								for (var i = 0;i < errorDataArr.length;i++) {
+									if(errorDataArr[i].quesType == "4"){
+										errorData.push(errorDataArr[i]);
+									}
+								}
+								document.getElementById("tpSelect").classList.add("mui-hidden");
+								document.getElementById("ques_card").classList.remove("mui-hidden");
+								//页面初始化时，设置全题收藏标识为未收藏
+								for(var i = 0;i < errorData.length;i++){
+									localStorage.setItem(i+1+"quesGet","0");
+								}
+								document.getElementById("tit").innerHTML = "网络编程（" + "" + count + "/" + errorData.length + "）";
+								document.getElementById("getQues").classList.remove("mui-hidden");
+								initQuesCheckStyle();
+								showQues();
+							}
+					});
+					document.getElementById("M_T_5").addEventListener('tap',function (e) {
+							count = 1;
+							if(document.getElementById("tp5").innerText == 0){
+								displayVoice2("当前题型没有题，请选择其他题型");
+							}else{
+								for (var i = 0;i < errorDataArr.length;i++) {
+									if(errorDataArr[i].quesType == "5"){
+										errorData.push(errorDataArr[i]);
+									}
+								}
+								document.getElementById("tpSelect").classList.add("mui-hidden");
+								document.getElementById("ques_card").classList.remove("mui-hidden");
+								//页面初始化时，设置全题收藏标识为未收藏
+								for(var i = 0;i < errorData.length;i++){
+									localStorage.setItem(i+1+"quesGet","0");
+								}
+								document.getElementById("tit").innerHTML = "JavaWeb基础（" + "" + count + "/" + errorData.length + "）";
+								document.getElementById("getQues").classList.remove("mui-hidden");
+								initQuesCheckStyle();
+								showQues();
+							}
+					});
+					document.getElementById("M_T_6").addEventListener('tap',function (e) {
+							count = 1;
+							if(document.getElementById("tp6").innerText == 0){
+								displayVoice2("当前题型没有题，请选择其他题型");
+							}else{
+								for (var i = 0;i < errorDataArr.length;i++) {
+									if(errorDataArr[i].quesType == "6"){
+										errorData.push(errorDataArr[i]);
+									}
+								}
+								document.getElementById("tpSelect").classList.add("mui-hidden");
+								document.getElementById("ques_card").classList.remove("mui-hidden");
+								//页面初始化时，设置全题收藏标识为未收藏
+								for(var i = 0;i < errorData.length;i++){
+									localStorage.setItem(i+1+"quesGet","0");
+								}
+								document.getElementById("tit").innerHTML = "spring springMvc（" + "" + count + "/" + errorData.length + "）";
+								document.getElementById("getQues").classList.remove("mui-hidden");
+								initQuesCheckStyle();
+								showQues();
+							}
+					});
+					document.getElementById("M_T_7").addEventListener('tap',function (e) {
+							count = 1;
+							if(document.getElementById("tp7").innerText == 0){
+								displayVoice2("当前题型没有题，请选择其他题型");
+							}else{
+								for (var i = 0;i < errorDataArr.length;i++) {
+									if(errorDataArr[i].quesType == "7"){
+										errorData.push(errorDataArr[i]);
+									}
+								}
+								document.getElementById("tpSelect").classList.add("mui-hidden");
+								document.getElementById("ques_card").classList.remove("mui-hidden");
+								//页面初始化时，设置全题收藏标识为未收藏
+								for(var i = 0;i < errorData.length;i++){
+									localStorage.setItem(i+1+"quesGet","0");
+								}
+								document.getElementById("tit").innerHTML = "hibernate mybatis（" + "" + count + "/" + errorData.length + "）";
+								document.getElementById("getQues").classList.remove("mui-hidden");
+								initQuesCheckStyle();
+								showQues();
+							}
+					});
+					document.getElementById("M_T_8").addEventListener('tap',function (e) {
+							count = 1;
+							if(document.getElementById("tp8").innerText == 0){
+								displayVoice2("当前题型没有题，请选择其他题型");
+							}else{
+								for (var i = 0;i < errorDataArr.length;i++) {
+									if(errorDataArr[i].quesType == "8"){
+										errorData.push(errorDataArr[i]);
+									}
+								}
+								document.getElementById("tpSelect").classList.add("mui-hidden");
+								document.getElementById("ques_card").classList.remove("mui-hidden");
+								//页面初始化时，设置全题收藏标识为未收藏
+								for(var i = 0;i < errorData.length;i++){
+									localStorage.setItem(i+1+"quesGet","0");
+								}
+								document.getElementById("tit").innerHTML = "Maven Linux常用命令（" + "" + count + "/" + errorData.length + "）";
+								document.getElementById("getQues").classList.remove("mui-hidden");
+								initQuesCheckStyle();
+								showQues();
+							}
+					});
+					document.getElementById("M_T_9").addEventListener('tap',function (e) {
+							count = 1;
+							if(document.getElementById("tp9").innerText == 0){
+								displayVoice2("当前题型没有题，请选择其他题型");
+							}else{
+								for (var i = 0;i < errorDataArr.length;i++) {
+									if(errorDataArr[i].quesType == "9"){
+										errorData.push(errorDataArr[i]);
+									}
+								}
+								document.getElementById("tpSelect").classList.add("mui-hidden");
+								document.getElementById("ques_card").classList.remove("mui-hidden");
+								//页面初始化时，设置全题收藏标识为未收藏
+								for(var i = 0;i < errorData.length;i++){
+									localStorage.setItem(i+1+"quesGet","0");
+								}
+								document.getElementById("tit").innerHTML = "项目相关知识（" + "" + count + "/" + errorData.length + "）";
+								document.getElementById("getQues").classList.remove("mui-hidden");
+								initQuesCheckStyle();
+								showQues();
+							}
+					});
+					
+					//选项文字样式初始化
+					function selectStyleInit(){
+						var labArr = document.getElementsByTagName("label");
+						for (var i = 0;i < labArr.length;i++) {
+							labArr[i].style.color = "#000000";
+						}
+					}
+					//点击收藏事件
+					document.getElementById("getQues").addEventListener('tap',function(){
+						if(this.style.color == "white"){
+							localStorage.setItem(count+"quesGet","1");
+							displayVoice("你已收藏");
+							this.style.color = "red";
+						}else{
+							localStorage.setItem(count+"quesGet","0");
+							displayVoice("你已取消收藏");
+							this.style.color = "white";
+						}
+						
+					})
+					
+					//解析模式
+					function DS_analysis(){
+						var quesRE = errorData[count-1].quesAnswer;
+						var labArr = document.getElementsByTagName("label");
+						var cigArr = new Array("A","B","C","D");
+						//正确选项标记为绿色
+						for (var i = 0;i <quesRE.length;i++) {
+							for (var j = 0;j < cigArr.length;j++) {
+								if(quesRE[i] == cigArr[j]){
+									labArr[j].style.color = 'green';
+									break; 
+								}
+							}
+						}
+					}
+					//页面数据展示
+					function showQues(){
+							selectStyleInit();
+							var quesAnswer = errorData[count-1].quesAnswer;
+							if(errorData[count-1].quesConfig == "1"){
+								var checkboxArr = document.getElementsByClassName("mui-input-row");
+								for (var i = 0;i < checkboxArr.length;i++) {
+									checkboxArr[i].className = "mui-input-row mui-checkbox mui-left";
+								}
+								var iptArr = document.getElementsByTagName("input");
+								if(document.getElementById("ques_detail").className != "mui-card mui-hidden"){
+									DS_analysis();
+									if(quesAnswer != ""){
+										var quesAnswerArr = quesAnswer.split("");
+										for (var i = 0;i < quesAnswerArr.length;i++) {
+											for (var j = 0;j < iptArr.length;j++) {
+												if(iptArr[j].value == quesAnswerArr[i]){
+													iptArr[j].parentNode.innerHTML = '<input name="checkbox" value="'+iptArr[j].value+'" type="checkbox" checked>';
+													break;
+												}
+											}	
+										} 
+									}else{
+										var quesAnswerArr = new Array("A","B","C","D");
+										for (var i = 0;i < iptArr.length;i++) {
+											for (var j = 0;j < quesAnswerArr.length;j++) {
+												if(iptArr[i].value == quesAnswerArr[j]){
+													iptArr[i].parentNode.innerHTML = '<input name="checkbox" value="'+iptArr[i].value+'" type="checkbox">';
+												}
+											}	
+										}
+									}
+								}else{
+									var quesAnswerArr = new Array("A","B","C","D");
+									for (var i = 0;i < iptArr.length;i++) {
+										for (var j = 0;j < quesAnswerArr.length;j++) {
+											if(iptArr[i].value == quesAnswerArr[j]){
+												iptArr[i].parentNode.innerHTML = '<input name="checkbox" value="'+iptArr[i].value+'" type="checkbox">';
+											}
+										}	
+									}
+								}
+								document.getElementById("tbs").innerText = "多选题";
+								
+							}else{
+								var radioArr = document.getElementsByClassName("mui-input-row");
+								for (var i = 0;i < radioArr.length;i++) {
+									radioArr[i].className = "mui-input-row mui-radio mui-left";
+								}
+								var iptArr = document.getElementsByTagName("input");
+								if(document.getElementById("ques_detail").className != "mui-card mui-hidden"){
+									DS_analysis();
+									if(quesAnswer != ""){
+										var quesAnswerArr = quesAnswer.split("");
+										for (var i = 0;i < quesAnswerArr.length;i++) {
+											for (var j = 0;j < iptArr.length;j++) {
+												if(iptArr[j].value == quesAnswerArr[i]){
+													iptArr[j].parentNode.innerHTML = '<input name="checkbox" value="'+iptArr[j].value+'" type="radio" checked>';
+												}
+											}	 
+										}
+									}else{
+										var quesAnswerArr = new Array("A","B","C","D");
+										for (var i = 0;i < iptArr.length;i++) {
+											for (var j = 0;j < quesAnswerArr.length;j++) {
+												if(iptArr[i].value == quesAnswerArr[j]){
+													iptArr[i].parentNode.innerHTML = '<input name="checkbox" value="'+iptArr[i].value+'" type="radio">';
+												}
+											}	
+										}
+									}
+								}else{
+									var quesAnswerArr = new Array("A","B","C","D");
+										for (var i = 0;i < iptArr.length;i++) {
+											for (var j = 0;j < quesAnswerArr.length;j++) {
+												if(iptArr[i].value == quesAnswerArr[j]){
+													iptArr[i].parentNode.innerHTML = '<input name="checkbox" value="'+iptArr[i].value+'" type="radio">';
+												}
+											}	
+										}
+								}
+								document.getElementById("tbs").innerText = "单选题";
+							}
+							document.getElementById("ques_title").innerText = errorData[count-1].quesTitle;
+							document.getElementById("select_A").innerText = errorData[count-1].selectA;
+							document.getElementById("select_B").innerText = errorData[count-1].selectB;
+							document.getElementById("select_C").innerText = errorData[count-1].selectC;
+							document.getElementById("select_D").innerText = errorData[count-1].selectD;
+					}
+					//判断单复样式
+					function initQuesCheckStyle(){
+						var configArr = document.getElementsByClassName("config");
+						if(errorData[count-1].quesConfig == "1"){
+							for (var i = 0;i < configArr.length;i++) {
+								configArr[i].innerHTML = '<input name="checkbox" value="'+configArr[i].childNodes[0].value+'" type="checkbox">';
+							}
+						}else{
+							for (var i = 0;i < configArr.length;i++) {
+									configArr[i].innerHTML = '<input name="checkbox" value="'+configArr[i].childNodes[0].value+'" type="radio">';
+							} 
+						}	
+					}
+					//点击详情事件
+					document.getElementById("detail").addEventListener('tap',function(){
+						if(document.getElementById("ques_detail").className == "mui-card mui-hidden"){
+							document.getElementById("ques_detail").classList.remove("mui-hidden");
+							document.getElementById("admin").innerText = errorData[count-1].quesAnswer ;
+							document.getElementById("admin").style.color = "green";
+							document.getElementById("ques_d").innerText = errorData[count-1].quesDetail;
+						}else{
+							document.getElementById("ques_detail").classList.add("mui-hidden");
+						}
+						showQues();
+					})
+					//将所有错题的状态值都存入数据库
+					function setAllQuesCollectCig(){
+						var AllQues = new Array();
+						for (var i = 0;i < errorData.length;i++) {
+							var str = "";
+							//题主键
+							str += errorData[i].quesUserId + ":";
+							//是否收藏了题
+							str += localStorage.getItem(i+1+"quesGet");
+							AllQues.push(str);
+						} 
+						var quesEchoString = "";
+						for (j = 0;j < AllQues.length;j++) {
+							quesEchoString += AllQues[j]+",";
+						}
+						mui.ajax(URL_SET_QUES_COLLECT_CIG,{
+							data:{
+								quesStr:quesEchoString
+							},
+							dataType:'json',
+							type:'post',
+							timeout: 50000, //超时时间设置为5秒；
+							crossDomain: true,
+							success:function(data){
+								displayVoice("提交成功");
+							},
+							error: function(xhr, type, errorThrown) {
+								mui.alert(YUN_ADMIN_MAIN_002);
+							}
+						})
+					}
+					//点击下一页事件
+					document.getElementById("next").addEventListener('tap',function(){
+						count++;		
+						document.getElementById("ques_detail").classList.add("mui-hidden");
+						if(count == errorData.length){
+							initQuesCheckStyle();
+							showQues();
+							document.getElementById("tit").innerHTML = "错题（" + "" + count + "/" + errorData.length + "）";
+						}else if(count > errorData.length){
+							count = errorData.length;
+							var btnArray = ['否', '是'];
+							mui.confirm('错题已预览完是否返回？，确认？', '错题预览', btnArray, function(e) {
+								if (e.index == 1) {
+									displayVoice2("错题已预览完，正在返回，请稍等");
+									//将数据传到后台保持
+									setAllQuesCollectCig();
+									//清空数据
+									errorData = new Array();
+									document.getElementById("ques_card").classList.add("mui-hidden");
+									document.getElementById("tpSelect").classList.remove("mui-hidden");
+								}
+							})
+						}else{
+							initQuesCheckStyle();
+							showQues();
+							document.getElementById("next").innerHTML = "下一题";
+							document.getElementById("tit").innerHTML = "错题（" + "" + count + "/" + errorData.length + "）";
+						}
+						if(count == 1){
+							document.getElementById("pre").innerHTML = "无";
+						}else{
+							document.getElementById("pre").innerHTML = "上一题";
+						}
+					})
+					//点击上一页事件
+					document.getElementById("pre").addEventListener('tap',function(){
+						count--;
+						document.getElementById("ques_detail").classList.add("mui-hidden");
+						if(count == 1){
+							initQuesCheckStyle();
+							showQues();
+							document.getElementById("pre").innerHTML = "无";
+							document.getElementById("tit").innerHTML = "错题（" + "" + count + "/" + errorData.length + "）";
+						}else if(count < 1){
+							count = 1;
+						}else{
+							initQuesCheckStyle();
+							showQues();
+							document.getElementById("pre").innerHTML = "上一题";
+							document.getElementById("tit").innerHTML = "错题（" + "" + count + "/" + errorData.length + "）";
+						}
+					})
+
+				}, false);
+			}(mui, document));
+		</script>
+	</body>
+
+</html>

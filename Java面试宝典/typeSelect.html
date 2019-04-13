@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style>
+			.divButton {
+				float: left;
+				height: 50px;
+				width: 35%;
+				line-height: 50px;
+				font-size: 10px;
+				text-align: center;
+				background-color: #007AFF;
+				margin-top: 30px;
+				margin-left: 10%;
+				border-radius: 20px;
+				border: 1px solid #EEE8EF;
+				box-shadow: 0px 2px 4px 0px #ccc;
+				color: white;
+			}
+			
+			.btn {
+				border-radius: 20px;
+				border: none;
+				width: 83%;
+				height: 40px;
+				font-size: 15px;
+				text-align: center;
+				margin: 0 auto;
+				-webkit-box-shadow: 0px 0px 8px #EFE4E4;
+				box-shadow: 0px 0px 8px #EFE4E4;
+				background: #007AFF;
+				margin-top: 450px; 
+			}
+			.header-f {
+				background: #007AFF;
+				border-bottom-left-radius: 10px;
+				border-bottom-right-radius: 10px;
+			}
+			.header-f h1{
+				color: white;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav header-f">
+			<h1 class="mui-title">题型选择</h1>
+		</header>
+		<div class="mui-content">
+			<div id="type1" class="divButton">Java基础</div>
+			<div id="type2" class="divButton">Java多线程</div>
+			<div id="type3" class="divButton">Java集合框架</div>
+			<div id="type4" class="divButton">网络编程</div>
+			<div id="type5" class="divButton">JavaWeb基础</div>
+			<div id="type6" class="divButton">spring springMvc</div>
+			<div id="type7" class="divButton">hibernate mybatis</div>
+			<div id="type8" class="divButton">Maven Linux常用命令</div>
+			<div id="type9" class="divButton">项目相关知识</div>
+			<div class="mui-content-padded">
+				<button id='btn' class="mui-btn mui-btn-block mui-btn-primary btn">提交</button>
+			</div>
+		</div>
+	</body>
+</html>
+<script src="js/mui.min.js"></script>
+<script type="text/javascript">
+	var typeSelect = "";
+	var selectArr = new Array();
+	(function($, doc) {
+		$.plusReady(function() {
+			doc.getElementsByClassName('mui-content')[0].style.height = (plus.display.resolutionHeight) + 'px';
+			$.back = function(event) {
+				plus.webview.getTopWebview().close();
+			};
+			var selectLoc = localStorage.getItem("typeSelectLs");
+			if(selectLoc != null){
+				selectArr = selectLoc.split(","); 
+			}
+			if(selectArr.length > 1){
+				for (var i = 0 ; i < selectArr.length; i++) {
+					if(selectArr[i] != ""){
+						document.getElementById(selectArr[i]).style.backgroundColor = '#2AC845';
+					}
+				}
+			}
+			document.getElementById('type1').addEventListener('tap', function(event) {
+				if(document.getElementById('type1').style.backgroundColor == 'rgb(42, 200, 69)'){
+					document.getElementById('type1').style.backgroundColor = '#007AFF';
+				//第一种：初始化，背景色为空。第二种：赋值为蓝色之后
+				}else{
+					document.getElementById('type1').style.backgroundColor = '#2AC845';
+				}
+			});
+			document.getElementById('type2').addEventListener('tap', function(event) {
+				if(document.getElementById('type2').style.backgroundColor== 'rgb(42, 200, 69)'){
+					document.getElementById('type2').style.backgroundColor = '#007AFF';
+				}else{
+					document.getElementById('type2').style.backgroundColor = '#2AC845';
+				}
+			});
+			document.getElementById('type3').addEventListener('tap', function(event) {
+				if(document.getElementById('type3').style.backgroundColor == 'rgb(42, 200, 69)'){
+					document.getElementById('type3').style.backgroundColor = '#007AFF';
+				}else{
+					document.getElementById('type3').style.backgroundColor = '#2AC845';
+				}
+			});			
+			document.getElementById('type4').addEventListener('tap', function(event) {
+				if(document.getElementById('type4').style.backgroundColor == 'rgb(42, 200, 69)'){
+					document.getElementById('type4').style.backgroundColor = '#007AFF';
+				}else{
+					document.getElementById('type4').style.backgroundColor = '#2AC845';
+				}
+			});
+			document.getElementById('type5').addEventListener('tap', function(event) {
+				if(document.getElementById('type5').style.backgroundColor == 'rgb(42, 200, 69)'){
+					document.getElementById('type5').style.backgroundColor = '#007AFF';
+				}else{
+					document.getElementById('type5').style.backgroundColor = '#2AC845';
+				}
+			});
+			document.getElementById('type6').addEventListener('tap', function(event) {
+				if(document.getElementById('type6').style.backgroundColor == 'rgb(42, 200, 69)'){
+					document.getElementById('type6').style.backgroundColor = '#007AFF';
+				}else{
+					document.getElementById('type6').style.backgroundColor = '#2AC845';
+				}
+			});
+			document.getElementById('type7').addEventListener('tap',function(){
+				if(document.getElementById('type7').style.backgroundColor == 'rgb(42, 200, 69)'){
+					document.getElementById('type7').style.backgroundColor = '#007AFF';
+				}else{
+					document.getElementById('type7').style.backgroundColor = '#2AC845';
+				}
+			})
+			document.getElementById('type8').addEventListener('tap',function(){
+				if(document.getElementById('type8').style.backgroundColor == 'rgb(42, 200, 69)'){
+					document.getElementById('type8').style.backgroundColor = '#007AFF';
+				}else{
+					document.getElementById('type8').style.backgroundColor = '#2AC845';
+				}
+			})
+			document.getElementById('type9').addEventListener('tap',function(){
+				if(document.getElementById('type9').style.backgroundColor == 'rgb(42, 200, 69)'){
+					document.getElementById('type9').style.backgroundColor = '#007AFF';
+				}else{
+					document.getElementById('type9').style.backgroundColor = '#2AC845';
+				}
+			})
+			
+			document.getElementById('btn').addEventListener('tap',function(){
+				var divArr = document.getElementsByClassName("divButton");
+				for (var i = 0; i < divArr.length ; i++) {
+					if(divArr[i].style.backgroundColor == "rgb(42, 200, 69)"){
+						//获取该元素的id名称
+						typeSelect += divArr[i].id + ",";
+					}
+				}
+				localStorage.setItem("typeSelectLs",typeSelect);
+				mui.openWindow({
+					url:'typeMenu.html',
+					id:'typeMenu',
+					extras: {
+						typeSelect:typeSelect
+					}
+				})
+			})
+		}, false);
+	}(mui, document));
+</script>

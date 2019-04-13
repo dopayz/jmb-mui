@@ -1,0 +1,414 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/icons-extra.css" rel="stylesheet"/>
+		<style type="text/css">
+			.header-f {
+				background: #007AFF;
+				border-bottom-left-radius: 10px;
+				border-bottom-right-radius: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav header-f">
+			<a class="mui-btn mui-btn-blue mui-btn-link mui-pull-left"><span id="tit" style="font-size: 15px;color: white;">收藏题</span>
+			<span class="mui-icon-extra mui-icon-extra-cart" id="getQues" style="color: red;margin-left:80px;"></span></a> 
+		</header>
+		<div class="mui-content">
+		    <div class="mui-card" id="ques_card">
+				<div class="mui-card-header mui-card-media">
+					<div class="mui-media-body">
+						<span style="color: green;" id="tbs">多选题</span>
+						<h4 id="ques_title">hibernate和mybatis的区别，下面哪些正确？</h4>
+					</div>
+				</div>
+				<div class="mui-card-content" >
+					<form class="mui-input-group">
+						<div class="mui-input-row mui-checkbox mui-left" style="height: 90px;">
+							<label>A:<span id="select_A">hibernate全自动，mybatis半自动</span></label>
+							<div class="config"><input name="checkbox" value="A" type="checkbox" ></div>
+						</div>
+						<div class="mui-input-row mui-checkbox mui-left" style="height: 90px;">
+							<label>B:<span id="select_B">hibernate基于ORM</span></label>
+							<div class="config"><input name="checkbox" value="B" type="checkbox" ></div>
+						</div>
+						<div class="mui-input-row mui-checkbox mui-left " style="height: 90px;">
+							<label>C:<span id="select_C">mybatis适合复杂sql文查询</span></label>
+							<div class="config"><input name="checkbox" value="C" type="checkbox" ></div>
+						</div>
+						<div class="mui-input-row mui-checkbox mui-left " style="height: 90px;">
+							<label>D:<span id="select_D">hibernate面向对象的持久层框架</span></label>
+							<div class="config"><input name="checkbox" value="D" type="checkbox" ></div>
+						</div>
+					</form>
+				</div>
+				<div class="mui-card-footer" style="text-align: center;">
+					<a id="pre" class="mui-card-link">上一题</a>
+					<a id="detail" class="mui-card-link ">查看详解</a>
+					<a id="next" class="mui-card-link">下一题</a>
+				</div>
+			
+				<div class="mui-card mui-hidden" id="ques_detail">
+					<div class="mui-card-header" style="font-size:small ;">正确答案：<span id="admin" style="color: green;"></span></div>
+						<div class="mui-card-content">
+							<div class="mui-card-content-inner">
+								详解:<span id="ques_d"></span>
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/appAudio.js"></script>
+		<script src="js/appConfig.js"></script>
+		<script type="text/javascript">
+			var collectData;
+			var count = 1;
+			//页面初始化
+			(function($, doc) {
+				$.plusReady(function() {
+					doc.getElementsByClassName('mui-content')[0].style.height = (plus.display.resolutionHeight) + 'px';
+					$.back = function(event) {
+						//关闭当前页面，但没有清除当前页面localStorage
+						plus.webview.getTopWebview().close();
+					};
+					//只在第一次进入时从后端获取收藏题集数据，并初始化页面
+					mui.ajax(URL_COLLECT_QUES,{
+							data:{},
+							dataType:'json',
+							type:'post',
+							timeout: 50000, //超时时间设置为5秒；
+							crossDomain: true,
+							success: function(data) {
+								if(data.length == 0){
+									displayVoice2("您没有收藏题，马上为你跳回主页面，请稍等");
+									mui.openWindow({
+										url:'typeMenu.html',
+										id:'typeMenu'
+									})
+								}
+								collectData = data;
+								//页面初始化时，设置全题收藏标识为已收藏
+								for(var i = 0;i < collectData.length;i++){
+									localStorage.setItem(i+1+"quesGet","1");
+								}
+								document.getElementById("tit").innerHTML = "收藏题（" + "" + count + "/" + collectData.length + "）";
+								initQuesCheckStyle();
+								showQues();
+							},
+							error: function(xhr, type, errorThrown) {
+								mui.alert(YUN_ADMIN_MAIN_002);
+							}
+					})
+					
+					//选项样式初始化
+					function selectStyleInit(){
+						var labArr = document.getElementsByTagName("label");
+						for (var i = 0;i < labArr.length;i++) {
+							labArr[i].style.color = "#000000";
+							labArr[i].childNodes[1].style.color = "#000000";
+						}
+					}
+					//点击收藏题事件
+					document.getElementById("getQues").addEventListener('tap',function(){
+						if(this.style.color == "white"){
+							localStorage.setItem(count+"quesGet","1");
+							displayVoice("你已收藏");
+							this.style.color = "red";
+						}else{
+							localStorage.setItem(count+"quesGet","0");
+							displayVoice("你已取消收藏");
+							this.style.color = "white";
+						}
+						
+					})
+					//多选题解析模式：正确选项用绿色标识，错误选项用红色标识，半对选项用半红半绿标识
+					function D_analysis(){
+						//new一个存错误选项的数组
+						var quesError = new Array();
+						//new一个存正确选项数组
+						var quesRight = new Array();
+						//new一个存半对选项数组
+						var quesER = new Array();
+						var quesRE = collectData[count-1].quesAnswer.split("");
+						var quesAsr = collectData[count-1].quesUserAnswer.split("");
+						//存半对和正确选项
+						for (var i = 0;i < quesAsr.length;i++) {
+							var countCig = 0;
+							for (var j = 0;j < quesRE.length;j++) {
+								if(quesAsr[i] == quesRE[j]){
+									quesER.push(quesAsr[i]);
+									break;
+								}else{
+									countCig++;
+								}
+							}
+							if(countCig == quesRE.length){
+								quesRight.push(quesAsr[i]);
+							}
+						}
+						//存错误选项
+						for (var i = 0;i < quesRE.length;i++) {
+							var countCig = 0;
+							for (var j =0;j < quesER.length;j++) {
+								if(quesRE[i] != quesER[j]){
+									countCig++;
+								}
+							}
+							if(countCig == quesER.length){
+								quesError.push(quesRE[i]);
+							}
+						}
+						var labArr = document.getElementsByTagName("label");
+						var cigArr = new Array("A","B","C","D");
+						//将错误选项标记为红 
+						for (var i = 0;i < quesError.length;i++) {
+							for (var j = 0;j < cigArr.length;j++) {
+								if(quesError[i] == cigArr[j]){
+									labArr[j].style.color = 'red';
+									labArr[j].childNodes[1].style.color = "red";
+									break;
+								}
+							}
+						}
+						//正确选项标记为绿色
+						for (var i = 0;i <quesRight.length;i++) {
+							for (var j = 0;j < cigArr.length;j++) {
+								if(quesRight[i] == cigArr[j]){
+									labArr[j].style.color = 'green';
+									labArr[j].childNodes[1].style.color = "green";
+									break;
+								}
+							}
+						}
+						//半对选项标记半红半绿
+						for (var i = 0;i <quesER.length;i++) {
+							for (var j = 0;j < cigArr.length;j++) {
+								if(quesER[i] == cigArr[j]){
+									labArr[j].style.color = 'red';
+									labArr[j].childNodes[1].style.color = 'green';
+									break;
+								}
+							}
+						}
+						
+					}
+					//单选解析模式
+					function S_analysis(){
+						var quesRE = collectData[count-1].quesAnswer;
+						var quesAsr = collectData[count-1].quesUserAnswer;
+						var labArr = document.getElementsByTagName("label");
+						var cigArr = new Array("A","B","C","D");
+						if(quesAsr == quesRE){
+							for (var j = 0;j < cigArr.length;j++) {
+								if(cigArr[j] == quesAsr){
+									labArr[j].style.color = "green";
+									labArr[j].childNodes[1].style.color = "green";
+									break;
+								}
+							}
+							return;
+						}else{
+							for (var j = 0;j < cigArr.length;j++) {
+								if(cigArr[j] == quesAsr){
+									labArr[j].style.color = "green";
+									labArr[j].childNodes[1].style.color = "green";
+								}
+								if(cigArr[j] == quesRE){
+									labArr[j].style.color = "red";
+									labArr[j].childNodes[1].style.color = "red";
+								}
+							}
+							return;
+						}
+					}
+					//页面数据展示
+					function showQues(){
+							selectStyleInit();
+							var quesUserAnswer = collectData[count-1].quesUserAnswer;
+							if(collectData[count-1].quesConfig == "1"){
+								var checkboxArr = document.getElementsByClassName("mui-input-row");
+								for (var i = 0;i < checkboxArr.length;i++) {
+									checkboxArr[i].className = "mui-input-row mui-checkbox mui-left";
+								}
+								D_analysis();
+								var iptArr = document.getElementsByTagName("input");
+								if(quesUserAnswer != ""){
+									var quesAnswerArr = quesUserAnswer.split("");
+									for (var i = 0;i < quesAnswerArr.length;i++) {
+										for (var j = 0;j < iptArr.length;j++) {
+											if(iptArr[j].value == quesAnswerArr[i]){
+												iptArr[j].parentNode.innerHTML = '<input name="checkbox" value="'+iptArr[j].value+'" type="checkbox" checked>';
+												break;
+											}
+										}	
+									} 
+								}else{
+									var quesAnswerArr = new Array("A","B","C","D");
+									for (var i = 0;i < iptArr.length;i++) {
+										for (var j = 0;j < quesAnswerArr.length;j++) {
+											if(iptArr[i].value == quesAnswerArr[j]){
+												iptArr[i].parentNode.innerHTML = '<input name="checkbox" value="'+iptArr[i].value+'" type="checkbox">';
+											}
+										}	
+									}
+								}
+								document.getElementById("tbs").innerText = "多选题";
+							}else{
+								var radioArr = document.getElementsByClassName("mui-input-row");
+								for (var i = 0;i < radioArr.length;i++) {
+									radioArr[i].className = "mui-input-row mui-radio mui-left";
+								}
+								
+								S_analysis(); 
+								var iptArr = document.getElementsByTagName("input");
+								if(collectData[count-1].quesAnswer != ""){
+									var quesAnswerArr = quesUserAnswer.split("");
+									for (var i = 0;i < quesAnswerArr.length;i++) {
+										for (var j = 0;j < iptArr.length;j++) {
+											if(iptArr[j].value == quesAnswerArr[i]){
+												iptArr[j].parentNode.innerHTML = '<input name="checkbox" value="'+iptArr[j].value+'" type="radio" checked>';
+											}
+										}	 
+									}
+								}else{
+									var quesAnswerArr = new Array("A","B","C","D");
+									for (var i = 0;i < iptArr.length;i++) {
+										for (var j = 0;j < quesAnswerArr.length;j++) {
+											if(iptArr[i].value == quesAnswerArr[j]){
+												iptArr[i].parentNode.innerHTML = '<input name="checkbox" value="'+iptArr[i].value+'" type="radio">';
+											}
+										}	
+									}
+								}
+								document.getElementById("tbs").innerText = "单选题";
+							}
+							document.getElementById("ques_title").innerText = collectData[count-1].quesTitle;
+							document.getElementById("select_A").innerText = collectData[count-1].selectA;
+							document.getElementById("select_B").innerText = collectData[count-1].selectB;
+							document.getElementById("select_C").innerText = collectData[count-1].selectC;
+							document.getElementById("select_D").innerText = collectData[count-1].selectD;
+					}
+					//判断单复样式
+					function initQuesCheckStyle(){
+						var configArr = document.getElementsByClassName("config");
+						if(collectData[count-1].quesConfig == "1"){
+							for (var i = 0;i < configArr.length;i++) {
+								configArr[i].innerHTML = '<input name="checkbox" value="'+configArr[i].childNodes[0].value+'" type="checkbox">';
+							}
+						}else{
+							for (var i = 0;i < configArr.length;i++) {
+									configArr[i].innerHTML = '<input name="checkbox" value="'+configArr[i].childNodes[0].value+'" type="radio">';
+							} 
+						}	
+					}
+					//点击详情事件
+					document.getElementById("detail").addEventListener('tap',function(){
+						if(document.getElementById("ques_detail").className == "mui-card mui-hidden"){
+							document.getElementById("ques_detail").classList.remove("mui-hidden");
+							document.getElementById("admin").innerText = collectData[count-1].quesAnswer ;
+							document.getElementById("admin").style.color = "green";
+							document.getElementById("ques_d").innerText = collectData[count-1].quesDetail;
+						}else{
+							document.getElementById("ques_detail").classList.add("mui-hidden");
+						}
+					})
+					//将所有收藏题的状态值都存入数据库
+					function setAllQuesCollectCig(){
+						var AllQues = new Array();
+						for (var i = 0;i < collectData.length;i++) {
+							var str = "";
+							//题主键
+							str += collectData[i].quesUserId + ":";
+							//是否收藏了题
+							str += localStorage.getItem(i+1+"quesGet");
+							AllQues.push(str);
+						} 
+						var quesEchoString = "";
+						for (j = 0;j < AllQues.length;j++) {
+							quesEchoString += AllQues[j]+",";
+						}
+						mui.ajax(URL_SET_QUES_COLLECT_CIG,{
+							data:{
+								quesStr:quesEchoString
+							},
+							dataType:'json',
+							type:'post',
+							timeout: 50000, //超时时间设置为5秒；
+							crossDomain: true,
+							success:function(data){
+								displayVoice("提交成功");
+							},
+							error: function(xhr, type, errorThrown) {
+								mui.alert(YUN_ADMIN_MAIN_002);
+							}
+						})
+					}
+					//点击下一页事件
+					document.getElementById("next").addEventListener('tap',function(){
+						count++;		
+						document.getElementById("ques_detail").classList.add("mui-hidden");
+						document.getElementById("getQues").style.color = "red";
+						if(count == collectData.length){
+							initQuesCheckStyle();
+							showQues();
+							document.getElementById("tit").innerHTML = "收藏题（" + "" + count + "/" + collectData.length + "）";
+						}else if(count > collectData.length){
+							count = collectData.length;
+							var btnArray = ['否', '是'];
+							mui.confirm('收藏题已预览完是否返回？，确认？', '收藏题预览', btnArray, function(e) {
+								if (e.index == 1) {
+									displayVoice2("收藏题已预览完，正在返回，请稍等");
+									//将数据传到后台保持
+									setAllQuesCollectCig();
+									mui.openWindow({
+										url:'typeMenu.html',
+										id:'typeMenu'
+									})
+								}
+							})
+						}else{
+							initQuesCheckStyle();
+							showQues();
+							document.getElementById("next").innerHTML = "下一题";
+							document.getElementById("tit").innerHTML = "收藏题（" + "" + count + "/" + collectData.length + "）";
+						}
+						if(count == 1){
+							document.getElementById("pre").innerHTML = "无";
+						}else{
+							document.getElementById("pre").innerHTML = "上一题";
+						}
+					})
+					//点击上一页事件
+					document.getElementById("pre").addEventListener('tap',function(){
+						count--;
+						document.getElementById("ques_detail").classList.add("mui-hidden");
+						document.getElementById("getQues").style.color = "red";
+						if(count == 1){
+							initQuesCheckStyle();
+							showQues();
+							document.getElementById("pre").innerHTML = "无";
+							document.getElementById("tit").innerHTML = "收藏题（" + "" + count + "/" + collectData.length + "）";
+						}else if(count < 1){
+							count = 1;
+						}else{
+							initQuesCheckStyle();
+							showQues();
+							document.getElementById("pre").innerHTML = "上一题";
+							document.getElementById("tit").innerHTML = "收藏题（" + "" + count + "/" + collectData.length + "）";
+						}
+					})
+
+				}, false);
+			}(mui, document));
+		</script>
+	</body>
+
+</html>
